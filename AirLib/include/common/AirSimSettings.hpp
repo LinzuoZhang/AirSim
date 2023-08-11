@@ -269,6 +269,15 @@ namespace airlib
             bool enable_trace = false;
             bool enable_collisions = true;
             bool is_fpv_vehicle = false;
+            // Customize
+            float max_thrust = 0.1f; // N
+            float max_torque = 0.1f;
+            float mass = 0.01f;
+            float arm_length = 0.09f;
+            float box_x = 0.05f;
+            float box_y = 0.04f;
+            float box_z = 0.03f;
+            float linear_drag_coefficient = 0.3f;
 
             //nan means use player start
             Vector3r position = VectorMath::nanVector(); //in global NED
@@ -809,6 +818,14 @@ namespace airlib
                                                                     const CameraSetting& camera_defaults)
         {
             auto vehicle_type = Utils::toLower(settings_json.getString("VehicleType", ""));
+            auto mass = settings_json.getFloat("Mass", 0.01f);
+            auto max_thrust = settings_json.getFloat("MaxThrust", 0.0f);
+            auto max_torque = settings_json.getFloat("MaxTorque", 0.0f);
+            auto arm_length = settings_json.getFloat("ArmLength", 0.0f);
+            auto box_x = settings_json.getFloat("BoxX", 0.05f);
+            auto box_y = settings_json.getFloat("BoxY", 0.05f);
+            auto box_z = settings_json.getFloat("BoxZ", 0.05f);
+            auto linear_drag_coef = settings_json.getFloat("LinearDragCoef", 0.3f);
 
             std::unique_ptr<VehicleSetting> vehicle_setting;
             if (vehicle_type == kVehicleTypePX4 || vehicle_type == kVehicleTypeArduCopterSolo || vehicle_type == kVehicleTypeArduCopter || vehicle_type == kVehicleTypeArduRover)
@@ -826,6 +843,17 @@ namespace airlib
 
             //required settings_json
             vehicle_setting->vehicle_type = vehicle_type;
+            // customize
+            vehicle_setting->mass = mass;
+            vehicle_setting->max_thrust = max_thrust;
+            vehicle_setting->max_torque = max_torque;
+            vehicle_setting->arm_length = arm_length;
+            vehicle_setting->box_x = box_x;
+            vehicle_setting->box_y = box_y;
+            vehicle_setting->box_z = box_z;
+            vehicle_setting->linear_drag_coefficient = linear_drag_coef;
+
+            std::cout << "vehicle max_thrust settings read as " << vehicle_setting->max_thrust << std::endl;
 
             //optional settings_json
             vehicle_setting->pawn_path = settings_json.getString("PawnPath", "");

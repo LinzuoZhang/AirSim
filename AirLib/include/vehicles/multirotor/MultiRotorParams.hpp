@@ -40,6 +40,7 @@ namespace airlib
             uint rotor_count;
             vector<RotorPose> rotor_poses;
             real_T mass;
+            real_T arm_length;
             Matrix3x3r inertia;
             Vector3r body_box;
 
@@ -334,6 +335,53 @@ namespace airlib
             params.body_box.y() = 0.11f;
             params.body_box.z() = 0.040f;
             real_T rotor_z = 2.5f / 100;
+
+            //computer rotor poses
+            initializeRotorQuadX(params.rotor_poses, params.rotor_count, arm_lengths.data(), rotor_z);
+
+            //compute inertia matrix
+            computeInertiaMatrix(params.inertia, params.body_box, params.rotor_poses, box_mass, motor_assembly_weight);
+        }
+        void setupFrameRomaQuad(Params& params)
+        {
+
+            params.rotor_count = 4;
+            std::vector<real_T> arm_lengths(params.rotor_count, 0.0775f);
+            params.mass = 0.375f;
+
+            real_T motor_assembly_weight = 0.016f;
+            real_T box_mass = params.mass - params.rotor_count * motor_assembly_weight;
+
+            params.rotor_params.calculateMaxThrust();
+
+            //set up dimensions of core body box or abdomen (not including arms).
+            params.body_box.x() = 0.05f;
+            params.body_box.y() = 0.04f;
+            params.body_box.z() = 0.03f;
+            real_T rotor_z = 1.0f / 100;
+
+            //computer rotor poses
+            initializeRotorQuadX(params.rotor_poses, params.rotor_count, arm_lengths.data(), rotor_z);
+
+            //compute inertia matrix
+            computeInertiaMatrix(params.inertia, params.body_box, params.rotor_poses, box_mass, motor_assembly_weight);
+        }
+
+        void setupFrameQuadFromSettings(Params& params)
+        {
+            // most param should be set
+            if (params.mass < 0.1) {
+                std::cout << "Error setupFrameQuadFromSettings" << std::endl;
+                return;
+            }
+            params.rotor_count = 4;
+            std::vector<real_T> arm_lengths(params.rotor_count, params.arm_length);
+
+            real_T motor_assembly_weight = 0.018f;
+            real_T box_mass = params.mass - params.rotor_count * motor_assembly_weight;
+
+            //set up dimensions of core body box or abdomen (not including arms).
+            real_T rotor_z = 1.0f / 100;
 
             //computer rotor poses
             initializeRotorQuadX(params.rotor_poses, params.rotor_count, arm_lengths.data(), rotor_z);

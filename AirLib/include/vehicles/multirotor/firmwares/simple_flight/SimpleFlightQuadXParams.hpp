@@ -37,7 +37,28 @@ namespace airlib
             // Use connection_info_.model for the model name, see Px4MultiRotorParams for example
 
             // Only Generic for now
-            setupFrameGenericQuad(params);
+            if (vehicle_setting_->mass < 0.1) {
+                std::cout << "using roma quad init " << std::endl;
+                setupFrameRomaQuad(params);
+                return;
+            }
+            else {
+                std::cout << "using settings init, max thrust is  " << vehicle_setting_->max_thrust << std::endl;
+                params.arm_length = vehicle_setting_->arm_length;
+                params.mass = vehicle_setting_->mass;
+                params.linear_drag_coefficient = vehicle_setting_->linear_drag_coefficient;
+
+                params.body_box.x() = vehicle_setting_->box_x;
+                params.body_box.y() = vehicle_setting_->box_y;
+                params.body_box.z() = vehicle_setting_->box_z;
+
+                
+
+                params.rotor_params.max_thrust = vehicle_setting_->max_thrust;
+                params.rotor_params.max_torque = vehicle_setting_->max_torque;
+
+                setupFrameQuadFromSettings(params);
+            }
         }
 
         virtual const SensorFactory* getSensorFactory() const override

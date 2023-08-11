@@ -285,7 +285,9 @@ namespace airlib
                 const real_T vel_comp = vertex.getNormal().dot(vel_vertex);
                 //if vel_comp is -ve then we cull the face. If velocity too low then drag is not generated
                 if (vel_comp > kDragMinVelocity) {
-                    const Vector3r drag_force = vertex.getNormal() * (-vertex.getDragFactor() * air_density * vel_comp * vel_comp);
+                    // Modify to linear + square
+                    real_T linear_coef = -vertex.getDragFactor() * air_density;
+                    const Vector3r drag_force = vertex.getNormal() * (linear_coef * vel_comp) + vertex.getNormal() * (linear_coef * 0.06 * vel_comp * vel_comp);
                     const Vector3r drag_torque = vertex.getPosition().cross(drag_force);
 
                     wrench.force += drag_force;
