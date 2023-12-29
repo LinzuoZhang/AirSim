@@ -365,7 +365,8 @@ namespace airlib
 
                 /************************* Update accelerations due to force and torque ************************/
                 //get new acceleration due to force - we'll use this acceleration in next time step
-
+                Utils::log(Utils::stringf("N-WRN drag force %s %f: ", VectorMath::toString(drag_wrench.force).c_str()));
+                Utils::log(Utils::stringf("velocity %s %f: ", VectorMath::toString(avg_linear).c_str(), dt));
                 next.accelerations.linear = (next_wrench.force / body.getMass()) + body.getEnvironment().getState().gravity;
             }
 
