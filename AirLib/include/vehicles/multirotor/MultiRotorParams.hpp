@@ -375,6 +375,7 @@ namespace airlib
                 return;
             }
             params.rotor_count = 4;
+            params.rotor_params.calculateMaxSpeedSquare();
             std::vector<real_T> arm_lengths(params.rotor_count, params.arm_length);
 
             real_T motor_assembly_weight = 0.03f;

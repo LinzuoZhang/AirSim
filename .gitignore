@@ -333,6 +333,7 @@ cmake_build/
 /PythonClient/**/cloud.txt
 /PythonClient/**/cloud.asc
 /Unreal/Plugins/AirSim/Content/VehicleAdv/SUV/
+/Unreal/Environments/Blocks/Content/drone/
 /suv_download_tmp
 car_assets.zip
 __pycache__/
